@@ -44,8 +44,18 @@ const ObjectLive = (() => {
 		}
 
 		deleteProperty(o, p) {
-			//console.log('delete', p);
-			return delete o[p];
+			const fullPath = `${this.name.substring(11)}.${p}`;
+			const oldValue = o[p];
+			const res = delete o[p];
+			if (res) {
+				this.owner.dispatchEvent('delete', fullPath, {
+					oldValue: oldValue,
+					newValue: undefined,
+					path: fullPath,
+					extra: {}
+				});
+			}
+			return res;
 		}
 
 		setRecursive(p, v) {

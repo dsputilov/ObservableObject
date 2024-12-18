@@ -84,3 +84,17 @@ it("create emptyObjectLive, addEventListener('change') and catch new value", fun
 	a.data.user = 'Alisa';
 	expect(checksum).toBe('undefinedAlisa');
 });
+
+it("create emptyObjectLive, addEventListener('delete'), delete property and catch event", function () {
+	let a = new ObjectLive({
+		user: {
+			age: 5
+		}
+	});
+	let checksum = '';
+	a.addEventListener('delete', /^user.age/, function (cfg) {
+		checksum += cfg.oldValue + '' + cfg.newValue + a.data.user.hasOwnProperty('age');
+	});
+	delete a.data.user.age;
+	expect(checksum).toBe('5undefinedfalse');
+});
